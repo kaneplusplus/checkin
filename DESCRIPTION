@@ -1,0 +1,24 @@
+Package: checkin
+Title: Normalize checkin data to time intervals
+Version: 0.0.1
+Authors@R: c(
+  person(given = "Michael J.",
+         family = "Kane",
+         email = "michael.kane@yale.edu",
+         role = c("aut", "cre"),
+         comment = c(ORCID = "http://orcid.org/0000-0003-1899-6662")))
+Description: Checkin data provide the time an event occured. However, for analysis it is often necessary to bin these data to time intervals. The checkin package provides utilities for normalizing these data for analysis.
+License: LGPL (>= 2.1)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Maintainer: Michael J. Kane <michael.kane@yale.edu>
+Depends: 
+  R (>= 2.10)
+Imports:
+  dplyr,
+  lubridate,
+  foreach
+Suggests: 
+    testthat
