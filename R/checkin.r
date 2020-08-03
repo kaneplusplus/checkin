@@ -54,16 +54,21 @@ normalize_by_day  <- function(x, id_col, ts_col, last_day = NULL) {
 #' @export
 checkins_in_interval <- function(x, id_col, ts_col, start, end,
   start_loc = TRUE, end_loc = TRUE) {
-  x <- x[order(x[[ts_col]]),]
-  if (start < min(x[[ts_col]])) { # || stop > max(x$time_stamp)) {
-    warning("Interval is non-overlapping with data.")
+  if (nrow(x) == 0) {
+    warning("No data, returning NULL")
     return(NULL)
-  } 
-  se <- NULL
-  if ( !(start %in% x[[ts_col]]) && start_loc) {
+  }
+  x <- x[order(x[[ts_col]]),]
+  if (start < min(x[[ts_col]]) && start_loc) { # || stop > max(x$time_stamp)) {
+    se <- x[1,]
+    se[[ts_col]] <- start
+    se[[setdiff(names(se), c(id_col, ts_col))]] <- NA
+  } else if ( !(start %in% x[[ts_col]]) && start_loc) {
     se <- x[max(which(x[[ts_col]] < start)),]
     se[[ts_col]] <- start
-  }
+  } else {
+    se <- NULL
+  } 
   ee <- NULL 
   if ( !(end %in% x[[ts_col]]) && end_loc ) {
     ee <- x[max(which(x[[ts_col]] < end)),]
