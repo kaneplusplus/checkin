@@ -18,15 +18,14 @@ carry_forward <- function(x, cd, ts_col) {
 
 #' Normalize data by day
 #' @param x the data frame of checkins
-#' @param id_col the column name denoting the id
 #' @param ts_col the column denoting the timestamp
 #' @param last_day the last day to normalize. If NULL then the last day
 #' in x$timestamp is used.
 #' @importFrom lubridate date days
 #' @importFrom foreach foreach %do% 
 #' @export
-normalize_by_day  <- function(x, id_col, ts_col, last_day = NULL) {
-  x <- x[order(x[[id_col]]),]
+normalize_by_day  <- function(x, ts_col, last_day = NULL) {
+  x <- x[order(x[[ts_col]]),]
   first_day <- date(min(x[[ts_col]]))
   if (is.null(last_day)) {
     last_day <- date(max(x[[ts_col]]))
@@ -45,14 +44,13 @@ normalize_by_day  <- function(x, id_col, ts_col, last_day = NULL) {
 
 #' Get the checkins in an interval
 #' @param x the data frame of checkins
-#' @param id_col the column name denoting the id
 #' @param ts_col the column denoting the timestamp
 #' @param start the beginning of the interval
 #' @param end the end of the interval
 #' @param start_loc should the starting location be included? Default TRUE.
 #' @param end_loc should the starting location be included? Default TRUE.
 #' @export
-checkins_in_interval <- function(x, id_col, ts_col, start, end,
+checkins_in_interval <- function(x, ts_col, start, end,
   start_loc = TRUE, end_loc = TRUE) {
   if (nrow(x) == 0) {
     warning("No data, returning NULL")
@@ -62,7 +60,11 @@ checkins_in_interval <- function(x, id_col, ts_col, start, end,
   if (start < min(x[[ts_col]]) && start_loc) { # || stop > max(x$time_stamp)) {
     se <- x[1,]
     se[[ts_col]] <- start
-    se[[setdiff(names(se), c(id_col, ts_col))]] <- NA
+    browser()
+    na_vars <- setdiff(names(se), ts_col)
+    for (nv in na_vars) {
+      se[[nv]] <- NA
+    }
   } else if ( !(start %in% x[[ts_col]]) && start_loc) {
     se <- x[max(which(x[[ts_col]] < start)),]
     se[[ts_col]] <- start

@@ -4,20 +4,10 @@
 \alias{checkins_in_interval}
 \title{Get the checkins in an interval}
 \usage{
-checkins_in_interval(
-  x,
-  id_col,
-  ts_col,
-  start,
-  end,
-  start_loc = TRUE,
-  end_loc = TRUE
-)
+checkins_in_interval(x, ts_col, start, end, start_loc = TRUE, end_loc = TRUE)
 }
 \arguments{
 \item{x}{the data frame of checkins}
-
-\item{id_col}{the column name denoting the id}
 
 \item{ts_col}{the column denoting the timestamp}
 

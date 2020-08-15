@@ -4,12 +4,10 @@
 \alias{normalize_by_day}
 \title{Normalize data by day}
 \usage{
-normalize_by_day(x, id_col, ts_col, last_day = NULL)
+normalize_by_day(x, ts_col, last_day = NULL)
 }
 \arguments{
 \item{x}{the data frame of checkins}
-
-\item{id_col}{the column name denoting the id}
 
 \item{ts_col}{the column denoting the timestamp}
 
