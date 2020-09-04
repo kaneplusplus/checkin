@@ -60,7 +60,6 @@ checkins_in_interval <- function(x, ts_col, start, end,
   if (start < min(x[[ts_col]]) && start_loc) { # || stop > max(x$time_stamp)) {
     se <- x[1,]
     se[[ts_col]] <- start
-    browser()
     na_vars <- setdiff(names(se), ts_col)
     for (nv in na_vars) {
       se[[nv]] <- NA
