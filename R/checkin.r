@@ -1,5 +1,7 @@
 
+#' @importFrom dplyr bind_rows
 #' @importFrom lubridate force_tz tz seconds
+#' @importFrom utils tail
 carry_forward <- function(x, cd, ts_col) {
   ret <- NULL
   xd <- tail(x[date(x[[ts_col]]) <= cd,], 1)
@@ -23,6 +25,7 @@ carry_forward <- function(x, cd, ts_col) {
 #' in x$timestamp is used.
 #' @importFrom lubridate date days
 #' @importFrom foreach foreach %do% 
+#' @importFrom dplyr bind_rows
 #' @export
 normalize_by_day  <- function(x, ts_col, last_day = NULL) {
   x <- x[order(x[[ts_col]]),]
@@ -34,6 +37,7 @@ normalize_by_day  <- function(x, ts_col, last_day = NULL) {
   days_covered <- rep(first_day, last_day - first_day + 1)
   days_covered <- days_covered + days(seq(0, length(days_covered) - 1))
 
+  d <- NULL
   add_days <- foreach(d = days_covered, .combine = bind_rows) %do% {
     carry_forward(x, d, ts_col)
   }
@@ -49,6 +53,7 @@ normalize_by_day  <- function(x, ts_col, last_day = NULL) {
 #' @param end the end of the interval
 #' @param start_loc should the starting location be included? Default TRUE.
 #' @param end_loc should the starting location be included? Default TRUE.
+#' @importFrom dplyr bind_rows
 #' @export
 checkins_in_interval <- function(x, ts_col, start, end,
   start_loc = TRUE, end_loc = TRUE) {
@@ -81,6 +86,7 @@ checkins_in_interval <- function(x, ts_col, start, end,
     ee)
 }
 
+#' @importFrom lubridate hour<- minute<- second<-
 to_prev_midnight <- function(x) {
   hour(x) <- 0
   minute(x) <- 0
@@ -88,6 +94,7 @@ to_prev_midnight <- function(x) {
   x
 }
 
+#' @importFrom utils tail
 interval_seq <- function(start, end, by) {
   ret <- NULL
   if (end > start) {
