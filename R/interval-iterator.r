@@ -30,10 +30,10 @@ hour_checkin_iter <- function(x, ts_col, start_loc = TRUE, end_loc = TRUE) {
   minute(start) <- 0
   second(start) <- 0
   end <- tail(x[[ts_col]], 1)
-  hour(end) <- 0
-  minute(end) <- 0
-  second(end) <- 0
-
+  hour(end) <- 23
+  minute(end) <- 59
+  second(end) <- 59
+  
   interval_iter(x, ts_col, start, end, hours(1) - seconds(1), start_loc, 
                 end_loc)
 
