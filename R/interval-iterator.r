@@ -38,7 +38,6 @@ hour_checkin_iter <- function(x, ts_col, end = NULL) {
   }
 
   if (is.null(end)) {
-    browser()
     end <- max(x[[ts_col]])
     minute(end) <- 59
     second(end) <- 59
