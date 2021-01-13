@@ -23,7 +23,7 @@ interval_iter <- function(x, ts_col, start, end, duration, start_loc = TRUE,
 #' @importFrom utils tail
 #' @importFrom lubridate hour<- minute<- second<- hours 
 #' @export
-hour_checkin_iter <- function(x, ts_col, end_of_day = TRUE) {
+hour_checkin_iter <- function(x, ts_col, end = NULL) {
   x <- x[order(x[[ts_col]]),]
   start <- x[[ts_col]][1]
   if (!(minute(start) == 0 && second(start) == 0)) {
@@ -37,12 +37,12 @@ hour_checkin_iter <- function(x, ts_col, end_of_day = TRUE) {
     x$timestamp[1] <- start
   }
 
-  end <- tail(x[[ts_col]], 1)
-  if (end_of_day) {
-    end <- end + days(1)
-    minute(end) <- hour(end) <- second(end) <- 0
-    end <- end - seconds(1)
-  } 
+  if (is.null(end)) {
+    browser()
+    end <- max(x[[ts_col]])
+    minute(end) <- 59
+    second(end) <- 59
+  }
     
   interval_iter(x, ts_col, start, end, hours(1) - seconds(1))
 }
