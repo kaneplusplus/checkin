@@ -18,34 +18,6 @@ carry_forward <- function(x, cd, ts_col) {
   ret
 }
 
-#' Normalize data by day
-#' @param x the data frame of checkins
-#' @param ts_col the column denoting the timestamp
-#' @param last_day the last day to normalize. If NULL then the last day
-#' in x$timestamp is used.
-#' @importFrom lubridate date days
-#' @importFrom foreach foreach %do% 
-#' @importFrom dplyr bind_rows
-#' @export
-normalize_by_day  <- function(x, ts_col, last_day = NULL) {
-  x <- x[order(x[[ts_col]]),]
-  first_day <- date(min(x[[ts_col]]))
-  if (is.null(last_day)) {
-    last_day <- date(max(x[[ts_col]]))
-  }
-
-  days_covered <- rep(first_day, last_day - first_day + 1)
-  days_covered <- days_covered + days(seq(0, length(days_covered) - 1))
-
-  d <- NULL
-  add_days <- foreach(d = days_covered, .combine = bind_rows) %do% {
-    carry_forward(x, d, ts_col)
-  }
-  add_days <- add_days[date(add_days[[ts_col]]) %in% days_covered,]
-  x <- bind_rows(x, add_days)
-  x[order(x[[ts_col]]),]
-}
-
 #' Get the checkins in an interval
 #' @param x the data frame of checkins
 #' @param ts_col the column denoting the timestamp
