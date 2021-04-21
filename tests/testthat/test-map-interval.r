@@ -26,4 +26,7 @@ y <- x %>%
   group_by(id) %>%
   map_hourly_interval_dfr(from_to, on = "timestamp") 
 
-
+# Create the mobility graph.
+y %>%
+  group_by(from, to, timestamp) %>%
+  summarize(n = n()) 

@@ -1,5 +1,5 @@
 Package: checkin
-Title: Normalize checkin data to time intervals
+Title: Multiresolution Processing of Discrete Location Data
 Version: 0.1.0
 Authors@R: c(
   person(given = "Michael J.",
@@ -21,4 +21,4 @@ Imports:
   lubridate,
   foreach
 Suggests: 
-    testthat
+  testthat

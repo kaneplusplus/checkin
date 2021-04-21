@@ -1,5 +1,7 @@
 context("Test normalize by day")
 
+x <- x %>% arrange(timestamp)
+
 data(checkins)
 
 x <- checkins %>%
