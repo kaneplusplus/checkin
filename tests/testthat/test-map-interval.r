@@ -1,5 +1,8 @@
 context("Text map interval")
 
+library(lubridate)
+library(dplyr)
+
 data(checkins)
 
 x <- checkins %>%

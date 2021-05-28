@@ -14,6 +14,7 @@ get_groups <- function(.x) {
 #' @importFrom dplyr bind_rows bind_cols
 #' @importFrom tibble tibble
 #' @importFrom foreach foreach %do% %dopar% getDoParName registerDoSEQ
+#' @export
 map_interval <- function(.x, .f, .gen, .combine, on, end = NULL, ...) {
   groups <- get_groups(.x)
   if (is.null(getDoParName())) {
@@ -34,6 +35,7 @@ map_interval <- function(.x, .f, .gen, .combine, on, end = NULL, ...) {
   } 
 }
 
+#' @export
 map_hourly_interval <- function(.x, .f, on, end = NULL, ...) {
   map_interval(
     .x = .x, 
@@ -44,6 +46,7 @@ map_hourly_interval <- function(.x, .f, on, end = NULL, ...) {
     ...)
 }
 
+#' @export
 map_hourly_interval_dfr <- function(.x, .f, on, end = NULL, ...) {
   map_interval(
     .x = .x, 
@@ -55,6 +58,7 @@ map_hourly_interval_dfr <- function(.x, .f, on, end = NULL, ...) {
     ...)
 }
 
+#' @export
 map_hourly_interval_dfc <- function(.x, .f, on, end = NULL, ...) {
   map_interval(
     .x = .x, 
