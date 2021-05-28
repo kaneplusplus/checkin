@@ -19,6 +19,7 @@ Depends:
 Imports:
   dplyr,
   lubridate,
-  foreach
+  foreach,
+  tibble
 Suggests: 
   testthat
