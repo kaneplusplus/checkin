@@ -1,5 +1,5 @@
 
-test_that("Checkins appear in the proper intervanl.", {
+test_that("Checkins appear in the proper interval.", {
 
   data(checkins)
 
@@ -35,7 +35,7 @@ test_that("Checkins appear in the proper intervanl.", {
 
   # Here we get an NA because we can't get a value before the start
   expect_snapshot(checkins_in_interval(x, "timestamp", start, end))
-  
+
   expect_warning(checkins_in_interval(x[c(),], "timestamp", start, end))
 
   # Here we don't because start_loc is FALSE

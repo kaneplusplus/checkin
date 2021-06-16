@@ -2,10 +2,8 @@
 
 export(checkins_in_interval)
 export(hour_checkin_iter)
-export(map_hourly_interval)
 export(map_hourly_interval_dfc)
 export(map_hourly_interval_dfr)
-export(map_interval)
 export(map_interval_dfc)
 export(map_interval_dfr)
 export(map_interval_impl)

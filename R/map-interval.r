@@ -37,17 +37,6 @@ map_interval_impl <- function(.x, .f, .gen, .combine, on, end = NULL, ...) {
 }
 
 #' @export
-map_hourly_interval <- function(.x, .f, on, end = NULL, ...) {
-  map_interval_impl(
-    .x = .x, 
-    .f = .f, 
-    .gen = hour_checkin_iter, 
-    on = on, 
-    end = end,
-    ...)
-}
-
-#' @export
 map_hourly_interval_dfr <- function(.x, .f, on, end = NULL, ...) {
   map_interval_impl(
     .x = .x, 
@@ -90,17 +79,6 @@ map_interval_dfr <- function(.x, .gen, .f, on, end = NULL, ...) {
     .f = .f, 
     .gen = .gen, 
     .combine = bind_rows,
-    on = on, 
-    end = end,
-    ...)
-}
-
-#' @export
-map_interval <- function(.x, .gen, .f, on, end = NULL, ...) {
-  map_interval_impl(
-    .x = .x, 
-    .f = .f, 
-    .gen = .gen, 
     on = on, 
     end = end,
     ...)
