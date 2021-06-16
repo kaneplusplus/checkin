@@ -70,4 +70,37 @@ map_hourly_interval_dfc <- function(.x, .f, on, end = NULL, ...) {
     ...)
 }
 
+#' @export
+map_interval_dfc <- function(.x, .gen, .f, on, end = NULL, ...) {
+  map_interval(
+    .x = .x, 
+    .f = .f, 
+    .gen = .gen, 
+    .combine = bind_cols,
+    on = on, 
+    end = end,
+    ...)
+}
 
+#' @export
+map_interval_dfr <- function(.x, .gen, .f, on, end = NULL, ...) {
+  map_interval(
+    .x = .x, 
+    .f = .f, 
+    .gen = .gen, 
+    .combine = bind_rows,
+    on = on, 
+    end = end,
+    ...)
+}
+
+#' @export
+map_interval <- function(.x, .gen, .f, on, end = NULL, ...) {
+  map_interval(
+    .x = .x, 
+    .f = .f, 
+    .gen = .gen, 
+    on = on, 
+    end = end,
+    ...)
+}

@@ -1,0 +1,55 @@
+---
+title: Processing Check-in Data for the Analysis of Human Mobility
+author:
+  # see ?rjournal_article for more information
+  - name: Michael Kane
+    affiliation: Yale University
+    address:
+    - 60 College Street
+    - New Haven, CT 06510, USA
+    email: michael.kane@yale.edu
+  - name: Simon Urbanek
+    affiliation: The University of Aukland
+    address:
+    - 38 Princes Street
+    - Auckland Central, Aukland 1010, NZ
+    email: s.urbanek@auckland.ac.nz
+  - name: Owais Gilani
+    affiliation: Bucknell Unversity
+    address:
+    - 38 Princes Street
+    - Lewisburgh, PA 17837, USA
+    email: owais.gilani@bucknell.edu
+abstract: >
+  An abstract of less than 150 words.
+preamble: |
+  % Any extra LaTeX you need in the preamble
+  
+# per R journal requirement, the bib filename should be the same as the output 
+# tex file. Don't forget to rename the bib file and change this example value.
+bibliography: RJreferences.bib
+
+output: rticles::rjournal_article
+---
+
+# Introduction and Background
+
+Introductory section which may include references in parentheses
+[@R], or cite a reference such as @R in the text.
+
+# Processing tasks for check-in data
+
+## Check-in intervals
+
+## Iterating over time intervals
+
+## Mapping over intervals and groups
+
+# Case Study: Dining patterns in Foursquare data
+
+# Conclusion
+
+# Acknowledgements
+
+This work was partially supported by the National Science Foundation (NSF) Grant Human Networks and Data Science - Infrastructure (HNDS-I), award numbers 2024335 and 2024233.
+

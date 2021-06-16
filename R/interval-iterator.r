@@ -1,8 +1,8 @@
 
 #' @importFrom lubridate hours
 #' @export
-interval_iter <- function(x, ts_col, start, end, duration, start_loc = TRUE, 
-  end_loc = TRUE) {
+time_interval_iter <- function(x, ts_col, start, end, duration, 
+                               start_loc = TRUE, end_loc = TRUE) {
 
   interval_iter <- 
     next_elem <- function() {
@@ -30,11 +30,11 @@ hour_checkin_iter <- function(x, ts_col, end = NULL) {
     start <- start + hours(1)
     minute(start) <- second(start) <- 0
 
-    i <- which.max(x$timestamp <= start)
+    i <- which.max(x[[ts_col]] <= start)
     if (i > 1) {
       x <- x[-( (seq_len(i) - 1)[-1] ),]
     }
-    x$timestamp[1] <- start
+    x[[ts_col]][1] <- start
   }
 
   if (is.null(end)) {
@@ -43,5 +43,6 @@ hour_checkin_iter <- function(x, ts_col, end = NULL) {
     second(end) <- 59
   }
     
-  interval_iter(x, ts_col, start, end, hours(1) - seconds(1))
+  time_interval_iter(x, ts_col, start, end, hours(1) - seconds(1))
 }
+

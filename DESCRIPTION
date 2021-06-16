@@ -15,11 +15,12 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Maintainer: Michael J. Kane <michael.kane@yale.edu>
 Depends: 
-  R (>= 2.10)
+  R (>= 3.8)
 Imports:
   dplyr,
   lubridate,
   foreach,
   tibble
 Suggests: 
-  testthat
+  testthat (>= 3.0.0)
+Config/testthat/edition: 3
