@@ -1,8 +1,6 @@
 
 test_that("Checkins appear in the proper intervanl.", {
 
-  library(dplyr)
-
   data(checkins)
 
   x <- checkins %>%
@@ -18,6 +16,16 @@ test_that("Checkins appear in the proper intervanl.", {
 
   expect_snapshot(checkins_in_interval(x, "timestamp", start, end))
 
+  # Start is before the first time.# 
+  start <- x$timestamp[1] - hours(1)
+  minute(start) <- 0
+  second(start) <- 0
+
+  end <- start + hours(1) - seconds(1)
+
+  # Here we get an NA because we can't get a value before the start
+  expect_snapshot(checkins_in_interval(x, "timestamp", start, end))
+  
   # No available first checkin to carry forward.
   start <- x$timestamp[1] 
   minute(start) <- 0
@@ -27,6 +35,8 @@ test_that("Checkins appear in the proper intervanl.", {
 
   # Here we get an NA because we can't get a value before the start
   expect_snapshot(checkins_in_interval(x, "timestamp", start, end))
+  
+  expect_warning(checkins_in_interval(x[c(),], "timestamp", start, end))
 
   # Here we don't because start_loc is FALSE
   expect_snapshot(

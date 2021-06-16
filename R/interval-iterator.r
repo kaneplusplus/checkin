@@ -21,7 +21,7 @@ time_interval_iter <- function(x, ts_col, start, end, duration,
 }
 
 #' @importFrom utils tail
-#' @importFrom lubridate hour<- minute<- second<- hours 
+#' @importFrom lubridate hour<- minute<- second<- hours minute second seconds
 #' @export
 hour_checkin_iter <- function(x, ts_col, end = NULL) {
   x <- x[order(x[[ts_col]]),]

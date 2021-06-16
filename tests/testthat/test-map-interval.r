@@ -1,9 +1,6 @@
 
 test_that("Hourly mapping works.", {
 
-  library(lubridate)
-  library(dplyr)
-
   data(checkins)
 
   x <- checkins %>%
@@ -37,4 +34,13 @@ test_that("Hourly mapping works.", {
     group_by(from, to, timestamp) %>%
     summarize(n = n()) 
   expect_snapshot(z)
+
+  expect_snapshot(x %>% map_hourly_interval_dfr(from_to, on = "timestamp"))
+
+  expect_snapshot(
+    x %>% 
+      group_by(id) %>%
+      map_hourly_interval_dfc(from_to, on = "timestamp") 
+  )
+  
 })

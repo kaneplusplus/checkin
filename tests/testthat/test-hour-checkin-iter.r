@@ -1,9 +1,4 @@
-test_that("Hour checkin iter works.", 
-{
-
-  library(dplyr)
-  library(foreach)
-  library(lubridate)
+test_that("Hour checkin iter works.", {
 
   data(checkins)
 
@@ -11,6 +6,8 @@ test_that("Hour checkin iter works.",
     filter(id == 335)
 
   x <- x[1:9,]
+
+  nextElem(hour_checkin_iter(x, "timestamp"))
 
   expect_snapshot(
     foreach(it = hour_checkin_iter(x, "timestamp")) %do% {
@@ -23,6 +20,7 @@ test_that("Hour checkin iter works.",
   hour(eo_next_day) <- 23
   minute(eo_next_day) <- 59
   second(eo_next_day) <- 59
+
 
   expect_snapshot(
     foreach(it = hour_checkin_iter(x, "timestamp", end = eo_next_day)) %do% {
