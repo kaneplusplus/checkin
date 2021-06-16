@@ -1,23 +1,4 @@
 
-#' @importFrom dplyr bind_rows
-#' @importFrom lubridate force_tz tz seconds
-#' @importFrom utils tail
-carry_forward <- function(x, cd, ts_col) {
-  ret <- NULL
-  xd <- tail(x[date(x[[ts_col]]) <= cd,], 1)
-  xd[[ts_col]] <- 
-    force_tz(date(cd) + days(1) - seconds(1), tz(x[[ts_col]]))
-  if ( !(xd[[ts_col]] %in% x[[ts_col]]) ) {
-    ret <- xd
-  }
-  xd[[ts_col]] <- 
-    force_tz(xd[[ts_col]] + seconds(1), tz(x[[ts_col]]))
-  if ( !(xd[[ts_col]] %in% x[[ts_col]]) ) {
-    ret <- bind_rows(ret, xd)
-  }
-  ret
-}
-
 #' Get the checkins in an interval
 #' @param x the data frame of checkins
 #' @param ts_col the column denoting the timestamp
@@ -58,22 +39,3 @@ checkins_in_interval <- function(x, ts_col, start, end,
     ee)
 }
 
-#' @importFrom lubridate hour<- minute<- second<-
-to_prev_midnight <- function(x) {
-  hour(x) <- 0
-  minute(x) <- 0
-  second(x) <- 0
-  x
-}
-
-#' @importFrom utils tail
-interval_seq <- function(start, end, by) {
-  ret <- NULL
-  if (end > start) {
-    ret <- start
-    while(tail(ret, 1) < end) {
-      ret <- c(ret, tail(ret, 1) + by)
-    }
-  }
-  ret
-}
