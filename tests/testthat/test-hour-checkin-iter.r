@@ -1,5 +1,8 @@
 test_that("Hour checkin iter works.", {
 
+  library(dplyr)
+  library(lubridate)
+
   data(checkins)
 
   x <- checkins %>%

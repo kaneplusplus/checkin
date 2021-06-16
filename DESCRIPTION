@@ -1,5 +1,5 @@
 Package: checkin
-Title: Multiresolution Processing of Discrete Location Data
+Title: Process Check-in Data for the Analysis of Human Mobility
 Version: 0.1.0
 Authors@R: c(
   person(given = "Michael J.",
