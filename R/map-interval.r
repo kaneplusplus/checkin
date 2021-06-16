@@ -94,13 +94,3 @@ map_interval_dfr <- function(.x, .gen, .f, on, end = NULL, ...) {
     ...)
 }
 
-#' @export
-map_interval <- function(.x, .gen, .f, on, end = NULL, ...) {
-  map_interval(
-    .x = .x, 
-    .f = .f, 
-    .gen = .gen, 
-    on = on, 
-    end = end,
-    ...)
-}

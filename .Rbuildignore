@@ -1,2 +1,5 @@
 ^LICENSE\.md$
 ^data-raw$
+^\.github$
+^README\.Rmd$
+^codecov\.yml$

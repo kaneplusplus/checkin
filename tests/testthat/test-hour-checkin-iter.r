@@ -1,25 +1,32 @@
-library(dplyr)
-library(foreach)
-library(lubridate)
+test_that("Hour checkin iter works.", 
+{
 
-data(checkins)
+  library(dplyr)
+  library(foreach)
+  library(lubridate)
 
-x <- checkins %>%
-  filter(id == 335)
+  data(checkins)
 
-x <- x[1:9,]
+  x <- checkins %>%
+    filter(id == 335)
 
-foreach(it = hour_checkin_iter(x, "timestamp")) %do% {
-  it
-} 
+  x <- x[1:9,]
 
-eo_next_day <- max(x$timestamp)
-eo_next_day <- eo_next_day + day(1)
-hour(eo_next_day) <- 23
-minute(eo_next_day) <- 59
-second(eo_next_day) <- 59
+  expect_snapshot(
+    foreach(it = hour_checkin_iter(x, "timestamp")) %do% {
+      it
+    } 
+  )
 
-foreach(it = hour_checkin_iter(x, "timestamp", end = eo_next_day)) %do% {
-  it
-} 
+  eo_next_day <- max(x$timestamp)
+  eo_next_day <- eo_next_day + days(1)
+  hour(eo_next_day) <- 23
+  minute(eo_next_day) <- 59
+  second(eo_next_day) <- 59
 
+  expect_snapshot(
+    foreach(it = hour_checkin_iter(x, "timestamp", end = eo_next_day)) %do% {
+      it
+    } 
+  )
+})
