@@ -4,21 +4,45 @@
 \alias{checkins_in_interval}
 \title{Get the checkins in an interval}
 \usage{
-checkins_in_interval(x, ts_col, start, end, start_loc = TRUE, end_loc = TRUE)
+checkins_in_interval(x, time, start, end, start_loc = TRUE, end_loc = TRUE)
 }
 \arguments{
-\item{x}{the data frame of checkins}
+\item{x}{the data frame of checkins.}
 
-\item{ts_col}{the column denoting the timestamp}
+\item{time}{the column denoting the timestamp.}
 
-\item{start}{the beginning of the interval}
+\item{start}{the beginning of the interval.}
 
-\item{end}{the end of the interval}
+\item{end}{the end of the interval.}
 
 \item{start_loc}{should the starting location be included? Default TRUE.}
 
 \item{end_loc}{should the starting location be included? Default TRUE.}
 }
 \description{
-Get the checkins in an interval
+This function filters the input data frame such that the
+output is a similar data frame where all entries are in the specified
+period between \code{start} and \code{end}. The \code{start_loc} and \code{end_loc} parameters
+specify whether or not last observations should be carried forward. If
+\code{start_loc} is \code{TRUE} then a checkin occuring before the interval will
+be carried forward so that the location appears in the output at the
+beginning of the interval. If \code{end_loc} is \code{TRUE} then a checkin is carried
+forward to the end of the interval.
+}
+\examples{
+ library(dplyr)
+ library(lubridate)
+ data(checkins)
+
+ x <- checkins \%>\%
+   filter(id == 335) \%>\%
+   arrange(timestamp)
+
+ start <- x$timestamp[1]
+ minute(start) <- 0
+ second(start) <- 0
+
+ end <- start + hours(1) - seconds(1)
+ checkins_in_interval(x, "timestamp", start, end)
+
 }

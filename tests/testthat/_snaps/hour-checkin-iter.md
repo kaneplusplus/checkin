@@ -1,7 +1,7 @@
 # Hour checkin iter works.
 
     Code
-      foreach(it = hour_checkin_iter(x, "timestamp")) %do% {
+      foreach(it = hour_checkin_gen(x, "timestamp")) %do% {
         it
       }
     Output
@@ -94,7 +94,7 @@
 ---
 
     Code
-      foreach(it = hour_checkin_iter(x, "timestamp", end = eo_next_day)) %do% {
+      foreach(it = hcg(x, "timestamp")) %do% {
         it
       }
     Output

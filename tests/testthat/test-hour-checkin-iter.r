@@ -2,6 +2,7 @@ test_that("Hour checkin iter works.", {
 
   library(dplyr)
   library(lubridate)
+  library(purrr)
 
   data(checkins)
 
@@ -10,10 +11,10 @@ test_that("Hour checkin iter works.", {
 
   x <- x[1:9,]
 
-  hour_checkin_iter(x, "timestamp")$nextElem()
+  hour_checkin_gen(x, "timestamp")$nextElem()
 
   expect_snapshot(
-    foreach(it = hour_checkin_iter(x, "timestamp")) %do% {
+    foreach(it = hour_checkin_gen(x, "timestamp")) %do% {
       it
     } 
   )
@@ -24,9 +25,9 @@ test_that("Hour checkin iter works.", {
   minute(eo_next_day) <- 59
   second(eo_next_day) <- 59
 
-
+  hcg <- partial(hour_checkin_gen, end = eo_next_day)
   expect_snapshot(
-    foreach(it = hour_checkin_iter(x, "timestamp", end = eo_next_day)) %do% {
+    foreach(it = hcg(x, "timestamp")) %do% {
       it
     } 
   )

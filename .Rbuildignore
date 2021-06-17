@@ -1,0 +1,9 @@
+^CODE_OF_CONDUCT\.md$
+^LICENSE\.md$
+^README\.rmd$
+^codecov\.yml$
+^data-raw$
+^\.github$
+^inst/CheckinPackage$
+^inst/kaggle-checkin$
+^inst/cp.zip

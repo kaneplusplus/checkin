@@ -46,12 +46,12 @@ test_that("Hourly mapping works.", {
   expect_snapshot(
     x %>% 
       group_by(id) %>%
-      map_interval_dfr(.gen = hour_checkin_iter, from_to, time = "timestamp") 
+      map_interval_dfr(.gen = hour_checkin_gen, from_to, time = "timestamp") 
   )
   expect_snapshot(
     x %>% 
       group_by(id) %>%
-      map_interval_dfc(.gen = hour_checkin_iter, from_to, time = "timestamp") 
+      map_interval_dfc(.gen = hour_checkin_gen, from_to, time = "timestamp") 
   )
   
 })

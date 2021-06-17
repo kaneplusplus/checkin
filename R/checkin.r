@@ -1,41 +1,68 @@
 
-#' Get the checkins in an interval
-#' @param x the data frame of checkins
-#' @param ts_col the column denoting the timestamp
-#' @param start the beginning of the interval
-#' @param end the end of the interval
+#' @title Get the checkins in an interval
+#'
+#' @description This function filters the input data frame such that the 
+#' output is a similar data frame where all entries are in the specified
+#' period between `start` and `end`. The `start_loc` and `end_loc` parameters
+#' specify whether or not last observations should be carried forward. If
+#' `start_loc` is `TRUE` then a checkin occuring before the interval will
+#' be carried forward so that the location appears in the output at the
+#' beginning of the interval. If `end_loc` is `TRUE` then a checkin is carried
+#' forward to the end of the interval.
+#' 
+#' @param x the data frame of checkins.
+#' @param time the column denoting the timestamp.
+#' @param start the beginning of the interval.
+#' @param end the end of the interval.
 #' @param start_loc should the starting location be included? Default TRUE.
 #' @param end_loc should the starting location be included? Default TRUE.
+#'
+#' @examples
+#'  library(dplyr)
+#'  library(lubridate)
+#'  data(checkins)
+#'
+#'  x <- checkins %>%
+#'    filter(id == 335) %>%
+#'    arrange(timestamp)
+#'
+#'  start <- x$timestamp[1]
+#'  minute(start) <- 0
+#'  second(start) <- 0
+#'
+#'  end <- start + hours(1) - seconds(1)
+#'  checkins_in_interval(x, "timestamp", start, end)
+#'
 #' @importFrom dplyr bind_rows
 #' @export
-checkins_in_interval <- function(x, ts_col, start, end,
+checkins_in_interval <- function(x, time, start, end,
   start_loc = TRUE, end_loc = TRUE) {
   if (nrow(x) == 0) {
     warning("No data, returning NULL")
     return(NULL)
   }
-  x <- x[order(x[[ts_col]]),]
-  if (start < min(x[[ts_col]]) && start_loc) { # || stop > max(x$time_stamp)) {
+  x <- x[order(x[[time]]),]
+  if (start < min(x[[time]]) && start_loc) { # || stop > max(x$time_stamp)) {
     se <- x[1,]
-    se[[ts_col]] <- start
-    na_vars <- setdiff(names(se), ts_col)
+    se[[time]] <- start
+    na_vars <- setdiff(names(se), time)
     for (nv in na_vars) {
       se[[nv]] <- NA
     }
-  } else if ( !(start %in% x[[ts_col]]) && start_loc) {
-    se <- x[max(which(x[[ts_col]] < start)),]
-    se[[ts_col]] <- start
+  } else if ( !(start %in% x[[time]]) && start_loc) {
+    se <- x[max(which(x[[time]] < start)),]
+    se[[time]] <- start
   } else {
     se <- NULL
   } 
   ee <- NULL 
-  if ( !(end %in% x[[ts_col]]) && end_loc ) {
-    ee <- x[max(which(x[[ts_col]] < end)),]
-    ee[[ts_col]] <- end 
+  if ( !(end %in% x[[time]]) && end_loc ) {
+    ee <- x[max(which(x[[time]] < end)),]
+    ee[[time]] <- end 
   }
   bind_rows(
     se,
-    x[x[[ts_col]] >= start & x[[ts_col]] <= end,],
+    x[x[[time]] >= start & x[[time]] <= end,],
     ee)
 }
 

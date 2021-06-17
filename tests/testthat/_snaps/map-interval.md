@@ -990,8 +990,7 @@
 ---
 
     Code
-      x %>% group_by(id) %>% map_interval_dfr(.gen = hour_checkin_iter, from_to,
-        time = "timestamp")
+      x %>% group_by(id) %>% map_interval_dfr(.gen = hour_checkin_gen, from_to, time = "timestamp")
     Output
       # A tibble: 156 x 5
          id     from    to timestamp           from_duration
@@ -1011,8 +1010,7 @@
 ---
 
     Code
-      x %>% group_by(id) %>% map_interval_dfc(.gen = hour_checkin_iter, from_to,
-        time = "timestamp")
+      x %>% group_by(id) %>% map_interval_dfc(.gen = hour_checkin_gen, from_to, time = "timestamp")
     Message <simpleMessage>
       New names:
       * from -> from...1
