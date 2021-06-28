@@ -16,26 +16,11 @@
 
     Code
       checkins_in_interval(x, "timestamp", start, end)
-    Warning <simpleWarning>
-      no non-missing arguments to max; returning -Inf
-    Warning <lifecycle_warning_deprecated>
-      The `i` argument of `[.tbl_df` must lie in [-rows, 0] if negative, as of tibble 3.0.0.
-      Use `NA_integer_` as row index to obtain a row full of `NA` values.
     Output
-      # A tibble: 92 x 3
-            id timestamp           location
-         <int> <dttm>                 <int>
-       1    NA 2020-04-18 23:00:00       NA
-       2   335 2020-04-18 23:59:59    32576
-       3   335 2020-04-18 23:59:59    15722
-       4   335 2020-04-18 23:59:59    32576
-       5   335 2020-04-18 23:59:59    32576
-       6   335 2020-04-18 23:59:59    15637
-       7   335 2020-04-18 23:59:59    15722
-       8   335 2020-04-18 23:59:59    15637
-       9   335 2020-04-18 23:59:59    15722
-      10   335 2020-04-18 23:59:59    32617
-      # ... with 82 more rows
+      # A tibble: 1 x 3
+           id timestamp           location
+        <int> <dttm>                 <int>
+      1    NA 2020-04-18 23:00:00       NA
 
 ---
 

@@ -34,6 +34,14 @@ output: rticles::rjournal_article
 
 # Introduction and Background
 
+Check-in data records the time and location of an electronic device when it is physically in a pre-specified vicinity. While the resolution of the time is generally of order seconds, the resolution of the vicinity can vary greatly depending on the use case. For example, in social media applications user check-ins are often localized to places of interest, like restaurants or concerts having resolutions on the order of meters to hundreds of meters. Other applications, like cell-tower check-ins, which allow cell providers to route calls and data to devices generally have resolutions of tens-of-meters to kilometers, depending on the population density of cell tower usage in the area [@gilani2020].
+
+In addition to differences in physical and temporal resolution there are differences in how the collection of these data is initiated. Social media devices generally rely on user input. That is, users signals they are at location in order to let there connections know and to register the event in their collection of experiences collected by the social media provider. On the other hand, events like cell tower check-ins occur automatically, when users' physical locations change and the move out of range of their current tower and closer to another. In this case the user is ``handed off'' to the closer tower, which is then responsible for delivering data to the device. 
+
+Despite these differences in resolution and record initiation, these types of data can be described similarly both in terms of their structure. 
+
+Note on privacy - intention is to understand aggregate movement. CDC guidelines 9 per census tract
+
 Introductory section which may include references in parentheses
 [@R], or cite a reference such as @R in the text.
 
@@ -44,6 +52,8 @@ Introductory section which may include references in parentheses
 ## Iterating over time intervals
 
 ## Mapping over intervals and groups
+
+## Creating custom interval iterators
 
 # Case Study: Dining patterns in Foursquare data
 

@@ -11,8 +11,6 @@ test_that("Hour checkin iter works.", {
 
   x <- x[1:9,]
 
-  hour_checkin_gen(x, "timestamp")$nextElem()
-
   expect_snapshot(
     foreach(it = hour_checkin_gen(x, "timestamp")) %do% {
       it

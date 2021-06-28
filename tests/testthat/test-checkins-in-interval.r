@@ -1,6 +1,8 @@
 
 test_that("Checkins appear in the proper interval.", {
 
+  library(dplyr)
+
   data(checkins)
 
   x <- checkins %>%

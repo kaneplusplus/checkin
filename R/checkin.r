@@ -50,15 +50,22 @@ checkins_in_interval <- function(x, time, start, end,
       se[[nv]] <- NA
     }
   } else if ( !(start %in% x[[time]]) && start_loc) {
-    se <- x[max(which(x[[time]] < start)),]
-    se[[time]] <- start
+    inds <- which(x[[time]] < start)
+    se <- NULL
+    if (length(inds) > 0) {
+      se <- x[max(inds),]
+      se[[time]] <- start
+    }
   } else {
     se <- NULL
   } 
   ee <- NULL 
   if ( !(end %in% x[[time]]) && end_loc ) {
-    ee <- x[max(which(x[[time]] < end)),]
-    ee[[time]] <- end 
+    inds <- which(x[[time]] < end)
+    if (length(inds)) {
+      ee <- x[max(inds),]
+      ee[[time]] <- end 
+    }
   }
   bind_rows(
     se,
