@@ -3,6 +3,7 @@ title: 'Processing raw mobility data with the `checkin` package'
 tags:
   - R
   - human mobility
+  - data processing
 authors:
   - name: Michael Kane
     orcid: 0000-0003-1899-6662
