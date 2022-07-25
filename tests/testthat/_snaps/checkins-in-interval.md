@@ -84,4 +84,5 @@
     Output
       # A tibble: 0 x 3
       # ... with 3 variables: id <int>, timestamp <dttm>, location <int>
+      # i Use `colnames()` to see all variable names
 

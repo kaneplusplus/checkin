@@ -7,3 +7,7 @@
 ^inst/CheckinPackage$
 ^inst/kaggle-checkin$
 ^inst/cp.zip
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^README\.Rmd$

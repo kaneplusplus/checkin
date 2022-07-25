@@ -15,7 +15,7 @@
 #' @param start the beginning of the interval.
 #' @param end the end of the interval.
 #' @param start_loc should the starting location be included? Default TRUE.
-#' @param end_loc should the starting location be included? Default TRUE.
+#' @param end_loc should the end location be included? Default TRUE.
 #'
 #' @examples
 #'  library(dplyr)
