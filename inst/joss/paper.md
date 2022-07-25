@@ -3,6 +3,7 @@ title: 'Processing raw mobility data with the `checkin` package'
 tags:
   - R
   - human mobility
+  - data processing
 authors:
   - name: Michael Kane
     orcid: 0000-0003-1899-6662
@@ -59,7 +60,7 @@ GPS) but is often aggregated to a discrete location, such as a store,
 census tract, county etc. While these data are information-rich, to
 analyze them, especially at the aggregate level (many devices and many
 locations), requires processing to transform them into a representation
-amenable to analysis. One such representation is the **mobility graph**,
+amenable to analysis. One such representation is the *mobility graph*,
 which encodes vertices as discrete locations, directed edges as the
 aggregate movement between locations, and edge weights capturing the
 amount of movement (or similar measure) between locations with
@@ -67,13 +68,50 @@ corresponding directed edge `[@gilani2020]`. More generally, processing
 steps for these aggregate analyses either descretize continuous
 timestamp and spatial data and/or aggregate already descretized data.
 
+Basic operations for processing time-stamp are implemented in the core
+of R and there are a plethora of package that make operations such as
+reading, comparing, and adding offsets more convenient (see Eddelbuettel
+(2020), Grolemund and Wickham (2011), etc. for more) there has not been
+a set of standard functions specifically for processing checking data,
+which requires the following types of operations:
+
+1.  Find the location of person/device at a specified interval, using
+    last-observation-carry forward if specified.
+2.  Construct a generator for creating sequences of intervals over which
+    data should be processed.
+3.  A map operation working in conjunction with interval iterators for
+    processing data over spatio-interval data.
+
+The `checkin` package provides an extensible library for providing these
+operations in a way that is compatible with the “tidy data” approach
+described in Wickham (2014), it is compatible with standard `dplyr`
+(Wickham et al. 2022) functions, and it uses `foreach` package
+(Microsoft and Weston 2022) to provide a parallel-backend for
+compute-intensive computing. Data sets returned from `checkin` functions
+are in the `tibble` (Grolemund and Wickham 2011) format.
+
 # Usage
 
 Consider the `checkins` data set from the `checkin` library shown below.
 The data consists of 3 columns corresponding to the device (id), time,
-(timestamp), and location identifier (location).
+(timestamp), and location identifier (location). There are a total of
+1000 unique people/devices rangin in time from 2020-04-19 00:01:13 EST
+to 2020-05-08 18:58:29 EST.
 
     library(checkin)
+    library(dplyr)
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
     data(checkins)
     checkins
 
@@ -93,70 +131,89 @@ The data consists of 3 columns corresponding to the device (id), time,
     ## # … with 14,599 more rows
     ## # ℹ Use `print(n = ...)` to see more rows
 
-# Related Packages
+Now suppose we would like to examine the checkins of indvidual/device
+number 335. We will extract all rows with id 335 and then specify an
+interval starting at the beginning of the hour of the first checkin to
+one hour later using the `checkins_in_interval()` function. The code and
+output are below and there are two things to note. First, the first row
+location is `NA`. This is because the individual/device does not appear
+before 2020-04-19 00:41:46 and a location cannot be determined. Second
+the original data set did not include an entry for id 335 at 2020-04-19
+00:59:59. This value was carried forward from the previous location.
 
-wickham2022 grolemund2011 weston2022 muller2022
+    library(lubridate)
 
-`Gala` is an Astropy-affiliated Python package for galactic dynamics.
-Python enables wrapping low-level languages (e.g., C) for speed without
-losing flexibility or ease-of-use in the user-interface. The API for
-`Gala` was designed to provide a class-based and user-friendly interface
-to fast (C or Cython-optimized) implementations of common operations
-such as gravitational potential and force evaluation, orbit integration,
-dynamical transformations, and chaos indicators for nonlinear dynamics.
-`Gala` also relies heavily on and interfaces well with the
-implementations of physical units and astronomical coordinate systems in
-the `Astropy` package (Astropy Collaboration 2013) (`astropy.units` and
-`astropy.coordinates`).
+    ## 
+    ## Attaching package: 'lubridate'
 
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has
-already been used in a number of scientific publications (Pearson,
-Price-Whelan, and Johnston 2017) and has also been used in graduate
-courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material (Binney and Tremaine 2008). The
-combination of speed, design, and support for Astropy functionality in
-`Gala` will enable exciting scientific explorations of forthcoming data
-releases from the *Gaia* mission (Gaia Collaboration 2016) by students
-and experts alike.
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     date, intersect, setdiff, union
 
-# Mathematics
+    x <- checkins %>%
+      filter(id == 335) %>%
+      arrange(timestamp)
 
-Single dollars ($) are required for inline mathematics
-e.g. *f*(*x*) = *e*<sup>*π*/*x*</sup>
+    start <- x$timestamp[1]
+    minute(start) <- 0
+    second(start) <- 0
 
-Double dollars make self-standing equations:
+    end <- start + hours(1) - seconds(1)
+    checkins_in_interval(x, "timestamp", start, end)
 
-$$\Theta(x) = \left\\{\begin{array}{l}
-0\textrm{ if } x &lt; 0\cr
-1\textrm{ else}
-\end{array}\right.$$
+    ## # A tibble: 3 × 3
+    ##      id timestamp           location
+    ##   <int> <dttm>                 <int>
+    ## 1    NA 2020-04-19 00:00:00       NA
+    ## 2   335 2020-04-19 00:41:46    32576
+    ## 3   335 2020-04-19 00:59:59    32576
 
-You can also use plain for equations and refer to from text.
+Finally, suppose we would like to get the locations of
+individuals/devices at the beginning of a time interval, the location at
+the end of the interval, and the total amount of time the
+individual/devices was checked into the beginning location. This
+operation would be performed in two steps. First, a function,
+`from_to()` is constructed, which takes the rows corresponding to a
+single `id` for a given interval. This function finds, the initial
+location (`from`), the end location(`to`), the timestamp at the
+*beginning* of the interval, and the duration of the initial location.
+In the second step, we group the `checkin` data by `id` and pass the
+result to the `map_hourly_interval_dfr()` function, which applies to
+`from_to()` function to each `id` over each hourly interval. Other
+intervals are included in the package and the documentation includes a
+information on how to construct similar functions over custom intervals.
 
-# Citations
+    from_to <- function(it) {
+      it$duration <- c(diff(it$timestamp), 0)
+      units(it$duration) <- "secs"
+      it$duration <- as.numeric(it$duration)
+      from_duration <- sum(it$duration[it$location == it$location[1]])
+      tibble(from=it$location[1],
+             to = it$location[nrow(it)],
+             timestamp = it$timestamp[1],
+             from_duration = from_duration)
+    }
 
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
+     checkins |>
+       head(100) |>
+       group_by(id) |>
+       map_hourly_interval_dfr(from_to, time = "timestamp") 
 
-If you want to cite a software repository URL (e.g. something on GitHub
-without a preferred citation) then you can do it with the example BibTeX
-entry below for Smith, Thaney, and Hahnel (2020).
-
-For a quick reference, the following citation commands can be used: -
-`@author:2001` -&gt; “Author et al. (2001)” - `[@author:2001]` -&gt;
-“(Author et al., 2001)” - `[@author1:2001; @author2:2001]` -&gt;
-“(Author1 et al., 2001; Author2 et al., 2002)”
-
-# Figures
-
-Figures can be included like this: ![Caption for example
-figure.](figure.png) and referenced from text using .
-
-Figure sizes can be customized by adding an optional second parameter:
-<img src="figure.png" style="width:20.0%"
-alt="Caption for example figure." />
+    ## # A tibble: 119 × 5
+    ##    id     from    to timestamp           from_duration
+    ##    <chr> <int> <int> <dttm>                      <dbl>
+    ##  1 166   37461 37461 2020-04-19 13:00:00          3599
+    ##  2 286   33165 33165 2020-04-19 18:00:00          3599
+    ##  3 313   33149 33149 2020-04-19 19:00:00          3599
+    ##  4 381   33359 33359 2020-04-19 16:00:00          3599
+    ##  5 381   33359 33359 2020-04-19 17:00:00          3599
+    ##  6 442   36496 36496 2020-04-19 18:00:00          3599
+    ##  7 456   33468 33468 2020-04-19 06:00:00          3599
+    ##  8 457   33130 33130 2020-04-19 13:00:00          3599
+    ##  9 457   33130 33130 2020-04-19 14:00:00          3599
+    ## 10 457   33130 33130 2020-04-19 15:00:00          3599
+    ## # … with 109 more rows
+    ## # ℹ Use `print(n = ...)` to see more rows
 
 # Acknowledgements
 
@@ -166,27 +223,23 @@ award numbers 2024335 and 2024233.
 
 # References
 
-Astropy Collaboration. 2013. “<span class="nocase">Astropy: A community
-Python package for astronomy</span>.” *Astronomy and Astrophysics* 558
-(October). <https://doi.org/10.1051/0004-6361/201322068>.
+Eddelbuettel, Dirk. 2020. *Anytime: Anything to ’POSIXct’ or ’Date’
+Converter*. <https://CRAN.R-project.org/package=anytime>.
 
-Binney, J., and S. Tremaine. 2008. *Galactic Dynamics: Second Edition*.
-Princeton University Press.
-<http://adsabs.harvard.edu/abs/2008gady.book.....B>.
+Grolemund, Garrett, and Hadley Wickham. 2011. “Dates and Times Made Easy
+with <span class="nocase">lubridate</span>.” *Journal of Statistical
+Software* 40 (3): 1–25. <https://www.jstatsoft.org/v40/i03/>.
 
-Gaia Collaboration. 2016. “<span class="nocase">The Gaia
-mission</span>.” *Astronomy and Astrophysics* 595 (November).
-<https://doi.org/10.1051/0004-6361/201629272>.
-
-Pearson, S., A. M. Price-Whelan, and K. V. Johnston. 2017. “<span
-class="nocase">Gaps in Globular Cluster Streams: Pal 5 and the Galactic
-Bar</span>.” *ArXiv e-Prints*, March.
-<http://adsabs.harvard.edu/abs/2017arXiv170304627P>.
+Microsoft, and Steve Weston. 2022. *Foreach: Provides Foreach Looping
+Construct*. <https://CRAN.R-project.org/package=foreach>.
 
 R Core Team. 2022. *R: A Language and Environment for Statistical
 Computing*. Vienna, Austria: R Foundation for Statistical Computing.
 <https://www.R-project.org/>.
 
-Smith, A. M., K. Thaney, and M. Hahnel. 2020. “Fidgit: An Ungodly Union
-of GitHub and Figshare.” *GitHub Repository*. GitHub.
-<https://github.com/arfon/fidgit>.
+Wickham, Hadley. 2014. “Tidy Data.” *Journal of Statistical Software* 59
+(10): 1–23. <https://doi.org/10.18637/jss.v059.i10>.
+
+Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2022.
+*Dplyr: A Grammar of Data Manipulation*.
+<https://CRAN.R-project.org/package=dplyr>.

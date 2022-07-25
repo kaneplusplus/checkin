@@ -1,0 +1,14 @@
+#!/bin/bash
+
+Rscript -e "knitr::knit('paper.Rmd')"
+mv paper.md paper-body.md
+cp preamble paper.md
+cat paper-body.md >> paper.md
+rm paper-body.md
+
+docker run --rm \
+    --volume $PWD:/data \
+    --user $(id -u):$(id -g) \
+    --env JOURNAL=joss \
+    openjournals/inara
+

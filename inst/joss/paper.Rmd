@@ -96,6 +96,7 @@ from_to <- function(it) {
 }
 
  checkins |>
+   head(100) |>
    group_by(id) |>
    map_hourly_interval_dfr(from_to, time = "timestamp") 
 ```
