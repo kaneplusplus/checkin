@@ -32,7 +32,7 @@ output: md_document
 ```{r, include = FALSE}
 library(future)
 library(doFuture)
-plan(multisession)
+plan(multisession, workers = max(c(1, parallel::detectCores()-2)))
 ```
 
 # Summary

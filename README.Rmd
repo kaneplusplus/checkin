@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 )
 library(future)
 library(doFuture)
-plan(multisession)
+plan(multisession, workers = max(c(1, parallel::detectCores()-2)))
 ```
 
 # checkin
@@ -85,7 +85,6 @@ from_to <- function(it) {
 # Acknowledgements
 
 This work was partially supported by the National Science Foundation (NSF) Grant Human Networks and Data Science - Infrastructure (HNDS-I), award numbers 2024335 and 2024233.
-
 
 ## Code of Conduct
 
