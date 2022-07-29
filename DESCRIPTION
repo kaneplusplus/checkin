@@ -22,10 +22,12 @@ Imports:
   foreach,
   tibble
 Suggests: 
-    covr,
-    knitr,
-    purrr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+  covr,
+  doFuture,
+  future,
+  knitr,
+  purrr,
+  rmarkdown,
+  testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

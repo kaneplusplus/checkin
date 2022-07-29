@@ -17,7 +17,7 @@ checkins_in_interval(x, time, start, end, start_loc = TRUE, end_loc = TRUE)
 
 \item{start_loc}{should the starting location be included? Default TRUE.}
 
-\item{end_loc}{should the starting location be included? Default TRUE.}
+\item{end_loc}{should the end location be included? Default TRUE.}
 }
 \description{
 This function filters the input data frame such that the
